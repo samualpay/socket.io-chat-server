@@ -1,8 +1,9 @@
 const userEvent = require('./event/user')
+const SocketClient = require('./socketClient')
 function SocketHandler (io) {
-  function loadEvent (socket, events) {
+  function loadEvent (socketClient, events) {
     events.forEach(elem => {
-      socket.on(elem.event, (data) => {
+      socketClient.on(elem.event, (data) => {
         const req = { data }
         function iteratorFunctions (runners, index) {
           if (index < runners.length) {
@@ -10,7 +11,11 @@ function SocketHandler (io) {
             const currentFunction = async function () {
               if (runners.length > index) {
                 const runner = runners[index]
-                await runner.apply(socket, [req, nextFunctioon])
+                try {
+                  await runner.apply(socketClient, [req, nextFunctioon])
+                } catch (err) {
+                  socketClient.error(elem.event, err)
+                }
               }
             }
             return currentFunction
@@ -23,7 +28,8 @@ function SocketHandler (io) {
     })
   }
   io.sockets.on('connection', (socket) => {
-    loadEvent(socket, userEvent)
+    const socketClient = new SocketClient(socket)
+    loadEvent(socketClient, userEvent)
   })
 }
 module.exports = SocketHandler
