@@ -25,8 +25,17 @@ class ChatRoomIsNotExist extends CustomError {
     this.msg = 'ChatRoomIsNotExist'
   }
 }
+
+class VerifyTokenError extends CustomError {
+  constructor () {
+    super('VerifyTokenError')
+    this.status = -20004
+    this.msg = 'VerifyTokenError'
+  }
+}
 module.exports = {
   RequiredParameterNotFound: new RequiredParameterNotFound(),
   ChatRoomIsExist: new ChatRoomIsExist(),
-  ChatRoomIsNotExist: new ChatRoomIsNotExist()
+  ChatRoomIsNotExist: new ChatRoomIsNotExist(),
+  VerifyTokenError: new VerifyTokenError()
 }

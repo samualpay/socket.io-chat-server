@@ -1,27 +1,14 @@
+const util = require('../common/utils')
 class SocketClient {
   constructor (socket) {
     this.socket = socket
     socket.sendMsg = (event, data) => {
-      socket.emit(event, {
-        status: 1,
-        err_msg: '',
-        data
-      })
+      const result = util.successResponse(data)
+      socket.emit(event, result)
     }
     socket.error = (event, errMsg) => {
-      if (errMsg.isCustom) {
-        socket.emit(event, {
-          status: errMsg.status,
-          err_msg: errMsg.msg,
-          data: {}
-        })
-      } else {
-        socket.emit(event, {
-          status: 500,
-          err_msg: 'server error',
-          data: errMsg
-        })
-      }
+      const result = util.errorResponse(errMsg)
+      socket.emit(event, result)
       console.log(errMsg)
     }
   }

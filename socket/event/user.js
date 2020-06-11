@@ -1,4 +1,5 @@
 const paramValid = require('../middlewares/paramValid')
+const verifyToken = require('../middlewares/verifyToken')
 module.exports = [
   {
     event: 'login',
@@ -11,8 +12,11 @@ module.exports = [
           }
         }
       }),
-      (req) => {
-        console.log(req)
+      verifyToken,
+      async function (req) {
+        this.isLogin = true
+        this.setUserProperties(req.payload)
+        console.log(this)
       }
     ]
   }
