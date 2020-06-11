@@ -1,6 +1,6 @@
 const Errors = require('../../errors')
 module.exports = function (param) {
-  return async function (req, next, event) {
+  return async function (req, next) {
     const data = req.data
     const keys = param.required
     if (keys && keys.length > 0) {
